@@ -27,7 +27,7 @@ var (
 
 func main() {
 	if !isFile("SII_Decrypt.exe") {
-		handleError(errors.New("SII_Decrypt.exe does not exist!"))
+		handleError(errors.New("SII_Decrypt.exe does not exist"))
 	}
 
 	err := addDocumentsPathToWatchList()
@@ -149,7 +149,8 @@ func isDir(path string) bool {
 }
 
 func decryptSii(filePath string) (bool, error) {
-	cmd := exec.Command("SII_Decrypt.exe", filePath)
+	pwd, _ := os.Getwd()
+	cmd := exec.Command(filepath.Join(pwd, "SII_Decrypt.exe"), filePath)
 	buf, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
@@ -325,8 +326,16 @@ func parseCamsCoordinate(cams []string) (string, string) {
 }
 
 func editSii(siiArray []string, location string, rotation string) (string, error) {
+	attachTrailer := 0
 	for i := range siiArray {
-		if strings.HasPrefix(siiArray[i], " truck_placement:") {
+		if strings.HasPrefix(siiArray[i], " assigned_trailer: _nameless") {
+			attachTrailer = 1
+		} else if strings.HasPrefix(siiArray[i], " assigned_trailer_connected: false") && attachTrailer == 1 {
+			attachTrailer = 2
+			siiArray[i] = " assigned_trailer_connected: true"
+		} else if strings.HasPrefix(siiArray[i], " nav_node_position:") && attachTrailer == 2 {
+			siiArray[i] = " nav_node_position: (0, 0, 0)"
+		} else if strings.HasPrefix(siiArray[i], " truck_placement:") {
 			siiArray[i] = " truck_placement: " + `(` + location + `) (` + rotation + `)`
 		} else if strings.HasPrefix(siiArray[i], " trailer_placement:") {
 			siiArray[i] = ` trailer_placement: (0, 0, 0) (` + rotation + `)`
@@ -346,8 +355,6 @@ func editSii(siiArray []string, location string, rotation string) (string, error
 			siiArray[i] = " wheels_wear: 0"
 		} else if strings.HasPrefix(siiArray[i], " wheels_wear[") {
 			siiArray[i] = ""
-		} else if strings.HasPrefix(siiArray[i], " fuel_relative:") {
-			siiArray[i] = " fuel_relative: 1"
 		}
 	}
 	return strings.Join(siiArray, "\n"), nil

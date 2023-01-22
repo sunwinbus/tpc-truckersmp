@@ -12,6 +12,10 @@ ETS2 and ATS on Windows x64
 * Step 1: Press Alt+F12 to save the coordinates of [freecam](https://steamcommunity.com/sharedfiles/filedetails/?id=171359712)
 * Step 2: Make a quicksave in game and reload it 5 seconds later
 
+## Changelog
+* Remove refueling
+* Auto attach the trailer when it's detached
+
 ## License
 [LICENSE](LICENSE)
 
