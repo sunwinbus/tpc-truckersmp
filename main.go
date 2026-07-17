@@ -328,31 +328,40 @@ func parseCamsCoordinate(cams []string) (string, string) {
 func editSii(siiArray []string, location string, rotation string) (string, error) {
 	attachTrailer := 0
 	for i := range siiArray {
-		if strings.HasPrefix(siiArray[i], " assigned_trailer: _nameless") {
-			attachTrailer = 1
-		} else if strings.HasPrefix(siiArray[i], " assigned_trailer_connected: false") && attachTrailer == 1 {
-			attachTrailer = 2
-			siiArray[i] = " assigned_trailer_connected: true"
+		if strings.HasPrefix(siiArray[i], " stored_vehicle_placement: (&") {
+			siiArray[i] = " stored_vehicle_placement: " + `(` + location + `) (` + rotation + `)`
+		} else if strings.HasPrefix(siiArray[i], " stored_trailer_placements[") {
+			siiArray[i] = strings.Split(siiArray[i], `: `)[0] + `: (0, 0, 0) (` + rotation + `)`
+            attachTrailer = 1
+		} else if strings.HasPrefix(siiArray[i], " stored_trailer_attached: false") && attachTrailer == 1 {
+			siiArray[i] = " stored_trailer_attached: true"
+            attachTrailer = 2
 		} else if strings.HasPrefix(siiArray[i], " nav_node_position:") && attachTrailer == 2 {
 			siiArray[i] = " nav_node_position: (0, 0, 0)"
-		} else if strings.HasPrefix(siiArray[i], " truck_placement:") {
-			siiArray[i] = " truck_placement: " + `(` + location + `) (` + rotation + `)`
-		} else if strings.HasPrefix(siiArray[i], " trailer_placement:") {
-			siiArray[i] = ` trailer_placement: (0, 0, 0) (` + rotation + `)`
-		} else if strings.HasPrefix(siiArray[i], " slave_trailer_placements[") {
-			siiArray[i] = strings.Split(siiArray[i], `: `)[0] + `: (0, 0, 0) (` + rotation + `)`
 		} else if strings.HasPrefix(siiArray[i], " trailer_body_wear:") {
 			siiArray[i] = " trailer_body_wear: 0"
+		} else if strings.HasPrefix(siiArray[i], " trailer_body_wear_unfixable:") {
+			siiArray[i] = " trailer_body_wear_unfixable: 0"
 		} else if strings.HasPrefix(siiArray[i], " chassis_wear:") {
 			siiArray[i] = " chassis_wear: 0"
+		} else if strings.HasPrefix(siiArray[i], " chassis_wear_unfixable:") {
+			siiArray[i] = " chassis_wear_unfixable: 0"
 		} else if strings.HasPrefix(siiArray[i], " engine_wear:") {
 			siiArray[i] = " engine_wear: 0"
+		} else if strings.HasPrefix(siiArray[i], " engine_wear_unfixable:") {
+			siiArray[i] = " engine_wear_unfixable: 0"
 		} else if strings.HasPrefix(siiArray[i], " transmission_wear:") {
 			siiArray[i] = " transmission_wear: 0"
+		} else if strings.HasPrefix(siiArray[i], " transmission_wear_unfixable:") {
+			siiArray[i] = " transmission_wear_unfixable: 0"
 		} else if strings.HasPrefix(siiArray[i], " cabin_wear:") {
 			siiArray[i] = " cabin_wear: 0"
+		} else if strings.HasPrefix(siiArray[i], " cabin_wear_unfixable:") {
+			siiArray[i] = " cabin_wear_unfixable: 0"
 		} else if strings.HasPrefix(siiArray[i], " wheels_wear:") {
 			siiArray[i] = " wheels_wear: 0"
+		} else if strings.HasPrefix(siiArray[i], " wheels_wear_unfixable:") {
+			siiArray[i] = " wheels_wear_unfixable: 0"
 		} else if strings.HasPrefix(siiArray[i], " wheels_wear[") {
 			siiArray[i] = ""
 		}

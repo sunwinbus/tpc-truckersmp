@@ -8,11 +8,14 @@ ETS2 and ATS on Windows x64
 <https://github.com/sunwinbus/tpc-truckersmp/releases/latest>
 
 ## How to Use
-* Preparation: Type `g_debug_camera 1` in [console](https://forum.scssoft.com/viewtopic.php?t=61852) (only once)
+* Preparation: Type `g_debug_camera 1` in [console](https://forum.scssoft.com/viewtopic.php?t=61852) (required only once)
 * Step 1: Press Alt+F12 to save the coordinates of [freecam](https://steamcommunity.com/sharedfiles/filedetails/?id=171359712)
 * Step 2: Make a quicksave in game and reload it 5 seconds later
 
 ## Changelog
+### v0.2026.0117
+* Add support for ETS2/ATS 1.60
+### v0.2023.0122
 * Remove refueling
 * Auto attach the trailer when it's detached
 
