@@ -1,5 +1,5 @@
 # TPC & QuickFix for TruckersMP
-Teleport to anywhere. Fix trucks at anywhere.
+Teleport anywhere. Fix trucks anywhere.
 
 ## Compability
 ETS2 and ATS on Windows x64

@@ -176,7 +176,8 @@ func readFile(filePath string) ([]string, error) {
 	for scanner.Scan() {
 		output = append(output, scanner.Text())
 	}
-	return output, nil
+	err = scanner.Err()
+	return output, err
 }
 
 func writeFile(filePath string, outPut string) error {
@@ -294,9 +295,6 @@ func flushChange(filePath string) (bool, error) {
 
 	if len(cams) > 0 {
 		location, rotation := parseCamsCoordinate(cams)
-		if err != nil {
-			return false, err
-		}
 
 		output, err := editSii(sii, location, rotation)
 		if err != nil {
@@ -332,10 +330,10 @@ func editSii(siiArray []string, location string, rotation string) (string, error
 			siiArray[i] = " stored_vehicle_placement: " + `(` + location + `) (` + rotation + `)`
 		} else if strings.HasPrefix(siiArray[i], " stored_trailer_placements[") {
 			siiArray[i] = strings.Split(siiArray[i], `: `)[0] + `: (0, 0, 0) (` + rotation + `)`
-            attachTrailer = 1
+			attachTrailer = 1
 		} else if strings.HasPrefix(siiArray[i], " stored_trailer_attached: false") && attachTrailer == 1 {
 			siiArray[i] = " stored_trailer_attached: true"
-            attachTrailer = 2
+			attachTrailer = 2
 		} else if strings.HasPrefix(siiArray[i], " nav_node_position:") && attachTrailer == 2 {
 			siiArray[i] = " nav_node_position: (0, 0, 0)"
 		} else if strings.HasPrefix(siiArray[i], " trailer_body_wear:") {
